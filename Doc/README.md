@@ -1,7 +1,7 @@
 # 🛡️ Global Code Protection & Intellectual Property Notice
 **Project Name:** NKQ Tools
 **Author:** Nilkamal Roy
-**Established:** 9 May 2026 at 8:30 am
+**Established:** 25 May 2026 at 8:30 am
 
 ---
 
