@@ -2,176 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/</loc>
-    <priority>1.00</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/about.html</loc>
-    <priority>0.50</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/privacy.html</loc>
-    <priority>0.30</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/terms.html</loc>
-    <priority>0.30</priority>
+    <loc>https://nilkamal-dev.github.io/NKQ-Tools/</loc>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/</loc>
-    <priority>0.90</priority>
+    <loc>https://nilkamal-dev.github.io/NKQ-Tools/index.html</loc>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/calculators/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/calculators/age-calculator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/calculators/binary-to-decimal.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/calculators/discount-calculator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/calculators/loan-emi-calculator.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/converters/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/converters/data-storage-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/converters/length-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/converters/speed-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/converters/temperature-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/base64-encoder-decoder.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/color-code-picker.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/htaccess-redirect-generator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/ip-address-lookup.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/html-to-markdown.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/developer-tools/markdown-to-html.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/base64-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/image-compressor.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/image-croper.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/image-resizer.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/qr-code-generator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/image-tools/webp-to-png.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/security-tools/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/security-tools/password-generator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/security-tools/privacy-policy-generator.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/seo-tools/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/seo-tools/meta-tag-generator.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/seo-tools/page-speed-test.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/seo-tools/site-audit.html</loc>
-    <priority>0.80</priority>
-  </url>
-
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/text-tools/</loc>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/text-tools/case-converter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/text-tools/character-counter.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/text-tools/grammar-checker.html</loc>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://Nilkamal-Dev.github.io/NKQ-Tools/tools/text-tools/word-counter.html</loc>
-    <priority>0.80</priority>
+    <loc>https://nilkamal-dev.github.io/NKQ-Tools/about.html</loc>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
