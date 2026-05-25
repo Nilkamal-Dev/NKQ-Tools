@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer - Multi-Tools</title>
+    <meta name="description" content="Resize your images to any dimension while maintaining aspect ratio. Free online image resizer tool.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-expand"></i> Image Resizer</h1>
+                <p class="tool-description">Resize your images to any dimension while maintaining aspect ratio. Supports JPG, PNG, GIF, and other image formats.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <!-- Upload Section -->
+                        <div class="upload-section text-center p-4 border rounded mb-4">
+                            <form id="uploadForm" class="mb-4">
+                                <div class="mb-3">
+                                    <label for="imageInput" class="form-label">Choose an image file</label>
+                                    <input type="file" class="form-control" id="imageInput" accept="image/*" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="widthInput" class="form-label">Width (px)</label>
+                                        <input type="number" class="form-control" id="widthInput" min="1" placeholder="Width">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="heightInput" class="form-label">Height (px)</label>
+                                        <input type="number" class="form-control" id="heightInput" min="1" placeholder="Height">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="maintainAspectRatio" checked>
+                                        <label class="form-check-label" for="maintainAspectRatio">
+                                            Maintain aspect ratio
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-expand"></i> Resize Image
+                                </button>
+                            </form>
+                            <div id="dropZone" class="drop-zone p-4 border rounded">
+                                <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                <p>Or drag and drop your image here</p>
+                            </div>
+                        </div>
+
+                        <!-- Preview Section -->
+                        <div id="previewSection" class="preview-section d-none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Original Image</h5>
+                                    <div class="image-preview mb-3">
+                                        <img id="originalPreview" class="img-fluid rounded" alt="Original image preview">
+                                        <p class="text-muted mt-2" id="originalDimensions"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Resized Image</h5>
+                                    <div class="image-preview mb-3">
+                                        <img id="resizedPreview" class="img-fluid rounded" alt="Resized image preview">
+                                        <p class="text-muted mt-2" id="resizedDimensions"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button id="downloadBtn" class="btn btn-success">
+                                    <i class="fas fa-download"></i> Download Resized Image
+                                </button>
+                            </div>
+                        </div>
+        </div>
+    </main>
+<footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.getElementById('uploadForm');
+            const imageInput = document.getElementById('imageInput');
+            const widthInput = document.getElementById('widthInput');
+            const heightInput = document.getElementById('heightInput');
+            const maintainAspectRatio = document.getElementById('maintainAspectRatio');
+            const dropZone = document.getElementById('dropZone');
+            const previewSection = document.getElementById('previewSection');
+            const originalPreview = document.getElementById('originalPreview');
+            const resizedPreview = document.getElementById('resizedPreview');
+            const originalDimensions = document.getElementById('originalDimensions');
+            const resizedDimensions = document.getElementById('resizedDimensions');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            let originalWidth = 0;
+            let originalHeight = 0;
+            let aspectRatio = 1;
+
+            // Handle file selection
+            imageInput.addEventListener('change', handleFileSelect);
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (imageInput.files.length > 0) {
+                    resizeImage();
+                }
+            });
+
+            // Handle dimension inputs
+            widthInput.addEventListener('input', function() {
+                if (maintainAspectRatio.checked) {
+                    heightInput.value = Math.round(this.value / aspectRatio);
+                }
+            });
+
+            heightInput.addEventListener('input', function() {
+                if (maintainAspectRatio.checked) {
+                    widthInput.value = Math.round(this.value * aspectRatio);
+                }
+            });
+
+            // Handle drag and drop
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    imageInput.files = e.dataTransfer.files;
+                    handleFileSelect();
+                }
+            });
+
+            function handleFileSelect() {
+                const file = imageInput.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            originalWidth = img.width;
+                            originalHeight = img.height;
+                            aspectRatio = originalWidth / originalHeight;
+                            
+                            originalPreview.src = e.target.result;
+                            originalDimensions.textContent = `Original size: ${originalWidth} Ã— ${originalHeight} pixels`;
+                            
+                            widthInput.value = originalWidth;
+                            heightInput.value = originalHeight;
+                            
+                            previewSection.classList.remove('d-none');
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function resizeImage() {
+                const width = parseInt(widthInput.value);
+                const height = parseInt(heightInput.value);
+
+                if (width > 0 && height > 0) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(originalPreview, 0, 0, width, height);
+                    
+                    resizedPreview.src = canvas.toDataURL();
+                    resizedDimensions.textContent = `Resized to: ${width} Ã— ${height} pixels`;
+                }
+            }
+
+            downloadBtn.addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = 'resized-image.png';
+                link.href = resizedPreview.src;
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html> 

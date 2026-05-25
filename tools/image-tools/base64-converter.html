@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Image Converter - NKQ Tools</title>
+    <meta name="description" content="Convert images to Base64 format and vice versa. Free online Base64 image converter tool.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-code"></i> Base64 Image Converter</h1>
+                <p class="tool-description">Convert images to Base64 format and vice versa. Perfect for embedding images in HTML, CSS, or JSON.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <!-- Conversion Type Selection -->
+                        <div class="conversion-type mb-4">
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="conversionType" id="imageToBase64" checked>
+                                <label class="btn btn-outline-primary" for="imageToBase64">
+                                    <i class="fas fa-image"></i> Image to Base64
+                                </label>
+                                <input type="radio" class="btn-check" name="conversionType" id="base64ToImage">
+                                <label class="btn btn-outline-primary" for="base64ToImage">
+                                    <i class="fas fa-code"></i> Base64 to Image
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Image to Base64 Section -->
+                        <div id="imageToBase64Section">
+                            <div class="upload-section text-center p-4 border rounded mb-4">
+                                <form id="uploadForm" class="mb-4">
+                                    <div class="mb-3">
+                                        <label for="imageInput" class="form-label">Choose an image file</label>
+                                        <input type="file" class="form-control" id="imageInput" accept="image/*" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-code"></i> Convert to Base64
+                                    </button>
+                                </form>
+                                <div id="dropZone" class="drop-zone p-4 border rounded">
+                                    <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                    <p>Or drag and drop your image here</p>
+                                </div>
+                            </div>
+
+                            <div id="base64Result" class="d-none">
+                                <div class="mb-3">
+                                    <label for="base64Output" class="form-label">Base64 String</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="base64Output" rows="5" readonly></textarea>
+                                        <button class="btn btn-outline-secondary" type="button" id="copyBase64">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="htmlOutput" class="form-label">HTML Code</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="htmlOutput" rows="3" readonly></textarea>
+                                        <button class="btn btn-outline-secondary" type="button" id="copyHtml">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cssOutput" class="form-label">CSS Code</label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="cssOutput" rows="3" readonly></textarea>
+                                        <button class="btn btn-outline-secondary" type="button" id="copyCss">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Base64 to Image Section -->
+                        <div id="base64ToImageSection" class="d-none">
+                            <div class="mb-4">
+                                <label for="base64Input" class="form-label">Enter Base64 String</label>
+                                <textarea class="form-control" id="base64Input" rows="5" placeholder="Paste your Base64 string here..."></textarea>
+                            </div>
+                            <div class="text-center mb-4">
+                                <button id="convertToImage" class="btn btn-primary">
+                                    <i class="fas fa-image"></i> Convert to Image
+                                </button>
+                            </div>
+                            <div id="imageResult" class="d-none text-center">
+                                <img id="convertedImage" class="img-fluid rounded mb-3" alt="Converted image">
+                                <div>
+                                    <button id="downloadImage" class="btn btn-success">
+                                        <i class="fas fa-download"></i> Download Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageToBase64Section = document.getElementById('imageToBase64Section');
+            const base64ToImageSection = document.getElementById('base64ToImageSection');
+            const imageToBase64Instructions = document.getElementById('imageToBase64Instructions');
+            const base64ToImageInstructions = document.getElementById('base64ToImageInstructions');
+            const uploadForm = document.getElementById('uploadForm');
+            const imageInput = document.getElementById('imageInput');
+            const dropZone = document.getElementById('dropZone');
+            const base64Result = document.getElementById('base64Result');
+            const base64Output = document.getElementById('base64Output');
+            const htmlOutput = document.getElementById('htmlOutput');
+            const cssOutput = document.getElementById('cssOutput');
+            const base64Input = document.getElementById('base64Input');
+            const convertToImage = document.getElementById('convertToImage');
+            const imageResult = document.getElementById('imageResult');
+            const convertedImage = document.getElementById('convertedImage');
+            const downloadImage = document.getElementById('downloadImage');
+
+            // Handle conversion type selection
+            document.querySelectorAll('input[name="conversionType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.id === 'imageToBase64') {
+                        imageToBase64Section.classList.remove('d-none');
+                        base64ToImageSection.classList.add('d-none');
+                        imageToBase64Instructions.classList.remove('d-none');
+                        base64ToImageInstructions.classList.add('d-none');
+                    } else {
+                        imageToBase64Section.classList.add('d-none');
+                        base64ToImageSection.classList.remove('d-none');
+                        imageToBase64Instructions.classList.add('d-none');
+                        base64ToImageInstructions.classList.remove('d-none');
+                    }
+                });
+            });
+
+            // Handle file selection
+            imageInput.addEventListener('change', handleFileSelect);
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (imageInput.files.length > 0) {
+                    convertToBase64(imageInput.files[0]);
+                }
+            });
+
+            // Handle drag and drop
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    imageInput.files = e.dataTransfer.files;
+                    handleFileSelect();
+                }
+            });
+
+            function handleFileSelect() {
+                const file = imageInput.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    convertToBase64(file);
+                }
+            }
+
+            function convertToBase64(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    base64Output.value = base64;
+                    htmlOutput.value = `<img src="${base64}" alt="Base64 image">`;
+                    cssOutput.value = `background-image: url(${base64});`;
+                    base64Result.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Copy buttons
+            document.getElementById('copyBase64').addEventListener('click', () => copyToClipboard(base64Output));
+            document.getElementById('copyHtml').addEventListener('click', () => copyToClipboard(htmlOutput));
+            document.getElementById('copyCss').addEventListener('click', () => copyToClipboard(cssOutput));
+
+            function copyToClipboard(element) {
+                element.select();
+                document.execCommand('copy');
+                // Show feedback
+                const button = element.nextElementSibling;
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 2000);
+            }
+
+            // Base64 to Image conversion
+            convertToImage.addEventListener('click', function() {
+                const base64 = base64Input.value.trim();
+                if (base64) {
+                    try {
+                        convertedImage.src = base64;
+                        imageResult.classList.remove('d-none');
+                    } catch (error) {
+                        alert('Invalid Base64 string. Please check your input.');
+                    }
+                }
+            });
+
+            // Download converted image
+            downloadImage.addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = 'converted-image.png';
+                link.href = convertedImage.src;
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html> 

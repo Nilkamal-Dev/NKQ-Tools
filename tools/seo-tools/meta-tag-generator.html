@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Meta Tag Generator - Multi-Tools</title>
+    <meta name="description" content="Generate SEO meta tags for your website. Create meta descriptions, Open Graph tags, Twitter Cards, and preview how they'll appear in search results.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .preview-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .preview-card h5 {
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+        .preview-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .tag-section {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .tag-section h4 {
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+        .tag-group {
+            margin-bottom: 15px;
+        }
+        .tag-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .tag-group .form-text {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .preview-google {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .preview-google .title {
+            color: #1a0dab;
+            font-size: 18px;
+            margin-bottom: 3px;
+            text-decoration: none;
+        }
+        .preview-google .url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .preview-google .description {
+            color: #545454;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .preview-facebook {
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .preview-facebook .image {
+            width: 100%;
+            height: 250px;
+            background-color: #f0f2f5;
+            background-size: cover;
+            background-position: center;
+        }
+        .preview-facebook .content {
+            padding: 12px;
+        }
+        .preview-facebook .title {
+            color: #1c1e21;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .preview-facebook .description {
+            color: #606770;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .preview-twitter {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .preview-twitter .image {
+            width: 100%;
+            height: 250px;
+            background-color: #f5f8fa;
+            background-size: cover;
+            background-position: center;
+        }
+        .preview-twitter .content {
+            padding: 12px;
+        }
+        .preview-twitter .title {
+            color: #14171a;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .preview-twitter .description {
+            color: #657786;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+        }
+        .character-count {
+            font-size: 0.875rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .character-count.warning {
+            color: #ffc107;
+        }
+        .character-count.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="spinner-border text-primary loading-spinner" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-tags"></i> SEO Meta Tag Generator</h1>
+                <p class="tool-description">Generate SEO meta tags for your website. Create meta descriptions, Open Graph tags, Twitter Cards, and preview how they'll appear in search results.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Basic Meta Tags -->
+                        <div class="tag-section">
+                            <h4>Basic Meta Tags</h4>
+                            <div class="tag-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" maxlength="60">
+                                <div class="character-count">0/60</div>
+                                <div class="form-text">The title of your page. Keep it under 60 characters.</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="description">Meta Description</label>
+                                <textarea class="form-control" id="description" rows="3" maxlength="160"></textarea>
+                                <div class="character-count">0/160</div>
+                                <div class="form-text">A brief description of your page. Keep it under 160 characters.</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="keywords">Keywords</label>
+                                <input type="text" class="form-control" id="keywords">
+                                <div class="form-text">Comma-separated keywords (optional).</div>
+                            </div>
+                        </div>
+
+                        <!-- Open Graph Tags -->
+                        <div class="tag-section">
+                            <h4>Open Graph Tags</h4>
+                            <div class="tag-group">
+                                <label for="ogTitle">Title</label>
+                                <input type="text" class="form-control" id="ogTitle">
+                                <div class="form-text">The title of your content (optional).</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="ogDescription">Description</label>
+                                <textarea class="form-control" id="ogDescription" rows="3"></textarea>
+                                <div class="form-text">A brief description of your content (optional).</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="ogImage">Image URL</label>
+                                <input type="url" class="form-control" id="ogImage">
+                                <div class="form-text">URL of the image to display (optional).</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="ogType">Type</label>
+                                <select class="form-select" id="ogType">
+                                    <option value="website">Website</option>
+                                    <option value="article">Article</option>
+                                    <option value="product">Product</option>
+                                    <option value="profile">Profile</option>
+                                </select>
+                                <div class="form-text">The type of your content.</div>
+                            </div>
+                        </div>
+
+                        <!-- Twitter Card Tags -->
+                        <div class="tag-section">
+                            <h4>Twitter Card Tags</h4>
+                            <div class="tag-group">
+                                <label for="twitterCard">Card Type</label>
+                                <select class="form-select" id="twitterCard">
+                                    <option value="summary">Summary</option>
+                                    <option value="summary_large_image">Summary Large Image</option>
+                                    <option value="app">App</option>
+                                    <option value="player">Player</option>
+                                </select>
+                                <div class="form-text">The type of Twitter Card to display.</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="twitterTitle">Title</label>
+                                <input type="text" class="form-control" id="twitterTitle">
+                                <div class="form-text">The title of your content (optional).</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="twitterDescription">Description</label>
+                                <textarea class="form-control" id="twitterDescription" rows="3"></textarea>
+                                <div class="form-text">A brief description of your content (optional).</div>
+                            </div>
+                            <div class="tag-group">
+                                <label for="twitterImage">Image URL</label>
+                                <input type="url" class="form-control" id="twitterImage">
+                                <div class="form-text">URL of the image to display (optional).</div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Section -->
+                        <div class="preview-section mb-4">
+                            <h4>Preview</h4>
+                            <ul class="nav nav-tabs" id="previewTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="google-tab" data-bs-toggle="tab" data-bs-target="#google" type="button" role="tab">
+                                        <i class="fab fa-google"></i> Google
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="facebook-tab" data-bs-toggle="tab" data-bs-target="#facebook" type="button" role="tab">
+                                        <i class="fab fa-facebook"></i> Facebook
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="twitter-tab" data-bs-toggle="tab" data-bs-target="#twitter" type="button" role="tab">
+                                        <i class="fab fa-twitter"></i> Twitter
+                                    </button>
+                                </li>
+                            </ul>
+                            <div class="tab-content p-4 border border-top-0 rounded-bottom">
+                                <div class="tab-pane fade show active" id="google" role="tabpanel">
+                                    <div class="preview-google">
+                                        <div class="title">Example Title</div>
+                                        <div class="url">https://example.com</div>
+                                        <div class="description">Example description of the page content. This is how your page will appear in Google search results.</div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="facebook" role="tabpanel">
+                                    <div class="preview-facebook">
+                                        <div class="image"></div>
+                                        <div class="content">
+                                            <div class="title">Example Title</div>
+                                            <div class="description">Example description of the page content. This is how your page will appear when shared on Facebook.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="twitter" role="tabpanel">
+                                    <div class="preview-twitter">
+                                        <div class="image"></div>
+                                        <div class="content">
+                                            <div class="title">Example Title</div>
+                                            <div class="description">Example description of the page content. This is how your page will appear when shared on Twitter.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Generated Code -->
+                        <div class="generated-code mb-4">
+                            <h4>Generated Code</h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <pre class="mb-0"><code id="generatedCode"></code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons mt-4">
+                            <button id="copyCodeBtn" class="btn btn-secondary me-2">
+                                <i class="fas fa-copy"></i> Copy Code
+                            </button>
+                            <button id="downloadBtn" class="btn btn-secondary me-2">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button id="generateBtn" class="btn btn-primary">
+                                <i class="fas fa-sync"></i> Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.getElementById('title');
+            const description = document.getElementById('description');
+            const keywords = document.getElementById('keywords');
+            const ogTitle = document.getElementById('ogTitle');
+            const ogDescription = document.getElementById('ogDescription');
+            const ogImage = document.getElementById('ogImage');
+            const ogType = document.getElementById('ogType');
+            const twitterCard = document.getElementById('twitterCard');
+            const twitterTitle = document.getElementById('twitterTitle');
+            const twitterDescription = document.getElementById('twitterDescription');
+            const twitterImage = document.getElementById('twitterImage');
+            const generatedCode = document.getElementById('generatedCode');
+            const copyCodeBtn = document.getElementById('copyCodeBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const generateBtn = document.getElementById('generateBtn');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+
+            // Character count handlers
+            function updateCharacterCount(input, maxLength) {
+                const count = input.value.length;
+                const counter = input.nextElementSibling;
+                counter.textContent = `${count}/${maxLength}`;
+                
+                if (count > maxLength * 0.9) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('error');
+                } else if (count > maxLength) {
+                    counter.classList.add('error');
+                    counter.classList.remove('warning');
+                } else {
+                    counter.classList.remove('warning', 'error');
+                }
+            }
+
+            title.addEventListener('input', () => updateCharacterCount(title, 60));
+            description.addEventListener('input', () => updateCharacterCount(description, 160));
+
+            // Preview handlers
+            function updatePreview() {
+                // Google preview
+                const googleTitle = document.querySelector('.preview-google .title');
+                const googleDescription = document.querySelector('.preview-google .description');
+                
+                googleTitle.textContent = title.value || 'Example Title';
+                googleDescription.textContent = description.value || 'Example description of the page content. This is how your page will appear in Google search results.';
+
+                // Facebook preview
+                const facebookTitle = document.querySelector('.preview-facebook .title');
+                const facebookDescription = document.querySelector('.preview-facebook .description');
+                const facebookImage = document.querySelector('.preview-facebook .image');
+                
+                facebookTitle.textContent = ogTitle.value || title.value || 'Example Title';
+                facebookDescription.textContent = ogDescription.value || description.value || 'Example description of the page content. This is how your page will appear when shared on Facebook.';
+                if (ogImage.value) {
+                    facebookImage.style.backgroundImage = `url(${ogImage.value})`;
+                } else {
+                    facebookImage.style.backgroundImage = 'none';
+                }
+
+                // Twitter preview
+                const twitterTitle = document.querySelector('.preview-twitter .title');
+                const twitterDescription = document.querySelector('.preview-twitter .description');
+                const twitterImage = document.querySelector('.preview-twitter .image');
+                
+                twitterTitle.textContent = twitterTitle.value || ogTitle.value || title.value || 'Example Title';
+                twitterDescription.textContent = twitterDescription.value || ogDescription.value || description.value || 'Example description of the page content. This is how your page will appear when shared on Twitter.';
+                if (twitterImage.value || ogImage.value) {
+                    twitterImage.style.backgroundImage = `url(${twitterImage.value || ogImage.value})`;
+                } else {
+                    twitterImage.style.backgroundImage = 'none';
+                }
+            }
+
+            // Generate code
+            function generateCode() {
+                const code = `<!-- Basic Meta Tags -->
+<meta name="title" content="${title.value}">
+<meta name="description" content="${description.value}">
+${keywords.value ? `<meta name="keywords" content="${keywords.value}">` : ''}
+
+<!-- Open Graph Tags -->
+<meta property="og:type" content="${ogType.value}">
+<meta property="og:title" content="${ogTitle.value || title.value}">
+<meta property="og:description" content="${ogDescription.value || description.value}">
+${ogImage.value ? `<meta property="og:image" content="${ogImage.value}">` : ''}
+
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="${twitterCard.value}">
+<meta name="twitter:title" content="${twitterTitle.value || ogTitle.value || title.value}">
+<meta name="twitter:description" content="${twitterDescription.value || ogDescription.value || description.value}">
+${twitterImage.value || ogImage.value ? `<meta name="twitter:image" content="${twitterImage.value || ogImage.value}">` : ''}`;
+
+                generatedCode.textContent = code;
+            }
+
+            // Event listeners
+            [title, description, keywords, ogTitle, ogDescription, ogImage, ogType, twitterCard, twitterTitle, twitterDescription, twitterImage].forEach(input => {
+                input.addEventListener('input', () => {
+                    updatePreview();
+                    generateCode();
+                });
+            });
+
+            // Copy code
+            copyCodeBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(generatedCode.textContent).then(() => {
+                    alert('Code copied to clipboard!');
+                });
+            });
+
+            // Download
+            downloadBtn.addEventListener('click', function() {
+                const blob = new Blob([generatedCode.textContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'meta-tags.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Generate
+            generateBtn.addEventListener('click', function() {
+                loadingOverlay.style.display = 'flex';
+                setTimeout(() => {
+                    updatePreview();
+                    generateCode();
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            });
+
+            // Initial generation
+            generateCode();
+        });
+    </script>
+</body>
+</html> 

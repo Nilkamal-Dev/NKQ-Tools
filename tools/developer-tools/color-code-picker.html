@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Code Picker - Multi-Tools</title>
+    <meta name="description" content="Pick and convert colors between different formats with this free online color code picker.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .color-preview {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+        }
+        .color-value {
+            font-family: monospace;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header mb-4">
+                <h1><i class="fas fa-palette"></i> Color Code Picker</h1>
+                <p class="tool-description">Pick and convert colors between different formats.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card tool-card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="colorPicker" class="form-label">Color Picker</label>
+                                <input type="color" class="form-control form-control-color w-100" id="colorPicker" value="#000000">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hexInput" class="form-label">Hex Color</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">#</span>
+                                    <input type="text" class="form-control" id="hexInput" placeholder="000000" maxlength="6">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="redInput" class="form-label">Red (0-255)</label>
+                                        <input type="number" class="form-control" id="redInput" min="0" max="255" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="greenInput" class="form-label">Green (0-255)</label>
+                                        <input type="number" class="form-control" id="greenInput" min="0" max="255" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="blueInput" class="form-label">Blue (0-255)</label>
+                                        <input type="number" class="form-control" id="blueInput" min="0" max="255" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="hueInput" class="form-label">Hue (0-360)</label>
+                                <input type="range" class="form-range" id="hueInput" min="0" max="360" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="saturationInput" class="form-label">Saturation (0-100)</label>
+                                <input type="range" class="form-range" id="saturationInput" min="0" max="100" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="lightnessInput" class="form-label">Lightness (0-100)</label>
+                                <input type="range" class="form-range" id="lightnessInput" min="0" max="100" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card tool-card">
+                        <div class="card-body">
+                            <div class="color-preview" id="colorPreview"></div>
+                            <div class="mb-3">
+                                <h5>Color Values</h5>
+                                <div class="color-value" id="hexValue">Hex: #000000</div>
+                                <div class="color-value" id="rgbValue">RGB: rgb(0, 0, 0)</div>
+                                <div class="color-value" id="hslValue">HSL: hsl(0, 0%, 0%)</div>
+                                <div class="color-value" id="cmykValue">CMYK: cmyk(0%, 0%, 0%, 100%)</div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-secondary" onclick="copyToClipboard('hex')">Copy Hex</button>
+                                <button class="btn btn-secondary" onclick="copyToClipboard('rgb')">Copy RGB</button>
+                                <button class="btn btn-secondary" onclick="copyToClipboard('hsl')">Copy HSL</button>
+                                <button class="btn btn-secondary" onclick="copyToClipboard('cmyk')">Copy CMYK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+<footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+    // Initialize color values
+    let currentColor = {
+        hex: '#000000',
+        rgb: { r: 0, g: 0, b: 0 },
+        hsl: { h: 0, s: 0, l: 0 },
+        cmyk: { c: 0, m: 0, y: 0, k: 100 }
+    };
+
+    // Update all color values
+    function updateColor(color) {
+        currentColor = color;
+        
+        // Update preview
+        document.getElementById('colorPreview').style.backgroundColor = color.hex;
+        
+        // Update color values display
+        document.getElementById('hexValue').textContent = `Hex: ${color.hex}`;
+        document.getElementById('rgbValue').textContent = `RGB: rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
+        document.getElementById('hslValue').textContent = `HSL: hsl(${color.hsl.h}, ${color.hsl.s}%, ${color.hsl.l}%)`;
+        document.getElementById('cmykValue').textContent = `CMYK: cmyk(${color.cmyk.c}%, ${color.cmyk.m}%, ${color.cmyk.y}%, ${color.cmyk.k}%)`;
+        
+        // Update inputs
+        document.getElementById('colorPicker').value = color.hex;
+        document.getElementById('hexInput').value = color.hex.slice(1);
+        document.getElementById('redInput').value = color.rgb.r;
+        document.getElementById('greenInput').value = color.rgb.g;
+        document.getElementById('blueInput').value = color.rgb.b;
+        document.getElementById('hueInput').value = color.hsl.h;
+        document.getElementById('saturationInput').value = color.hsl.s;
+        document.getElementById('lightnessInput').value = color.hsl.l;
+    }
+
+    // Convert RGB to Hex
+    function rgbToHex(r, g, b) {
+        return '#' + [r, g, b].map(x => {
+            const hex = x.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        }).join('');
+    }
+
+    // Convert RGB to HSL
+    function rgbToHsl(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            
+            h /= 6;
+        }
+        
+        return {
+            h: Math.round(h * 360),
+            s: Math.round(s * 100),
+            l: Math.round(l * 100)
+        };
+    }
+
+    // Convert RGB to CMYK
+    function rgbToCmyk(r, g, b) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        
+        const k = 1 - Math.max(r, g, b);
+        const c = (1 - r - k) / (1 - k) || 0;
+        const m = (1 - g - k) / (1 - k) || 0;
+        const y = (1 - b - k) / (1 - k) || 0;
+        
+        return {
+            c: Math.round(c * 100),
+            m: Math.round(m * 100),
+            y: Math.round(y * 100),
+            k: Math.round(k * 100)
+        };
+    }
+
+    // Event listeners
+    document.getElementById('colorPicker').addEventListener('input', function(e) {
+        const hex = e.target.value;
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        
+        updateColor({
+            hex,
+            rgb: { r, g, b },
+            hsl: rgbToHsl(r, g, b),
+            cmyk: rgbToCmyk(r, g, b)
+        });
+    });
+
+    document.getElementById('hexInput').addEventListener('input', function(e) {
+        const hex = '#' + e.target.value;
+        if (/^#[0-9A-F]{6}$/i.test(hex)) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            
+            updateColor({
+                hex,
+                rgb: { r, g, b },
+                hsl: rgbToHsl(r, g, b),
+                cmyk: rgbToCmyk(r, g, b)
+            });
+        }
+    });
+
+    ['redInput', 'greenInput', 'blueInput'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function(e) {
+            const r = parseInt(document.getElementById('redInput').value) || 0;
+            const g = parseInt(document.getElementById('greenInput').value) || 0;
+            const b = parseInt(document.getElementById('blueInput').value) || 0;
+            
+            updateColor({
+                hex: rgbToHex(r, g, b),
+                rgb: { r, g, b },
+                hsl: rgbToHsl(r, g, b),
+                cmyk: rgbToCmyk(r, g, b)
+            });
+        });
+    });
+
+    ['hueInput', 'saturationInput', 'lightnessInput'].forEach(id => {
+        document.getElementById(id).addEventListener('input', function(e) {
+            const h = parseInt(document.getElementById('hueInput').value);
+            const s = parseInt(document.getElementById('saturationInput').value);
+            const l = parseInt(document.getElementById('lightnessInput').value);
+            
+            // Convert HSL to RGB
+            const c = (1 - Math.abs(2 * l / 100 - 1)) * s / 100;
+            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            const m = l / 100 - c / 2;
+            
+            let r, g, b;
+            if (h < 60) { [r, g, b] = [c, x, 0]; }
+            else if (h < 120) { [r, g, b] = [x, c, 0]; }
+            else if (h < 180) { [r, g, b] = [0, c, x]; }
+            else if (h < 240) { [r, g, b] = [0, x, c]; }
+            else if (h < 300) { [r, g, b] = [x, 0, c]; }
+            else { [r, g, b] = [c, 0, x]; }
+            
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+            
+            updateColor({
+                hex: rgbToHex(r, g, b),
+                rgb: { r, g, b },
+                hsl: { h, s, l },
+                cmyk: rgbToCmyk(r, g, b)
+            });
+        });
+    });
+
+    function copyToClipboard(format) {
+        let text;
+        switch (format) {
+            case 'hex':
+                text = currentColor.hex;
+                break;
+            case 'rgb':
+                text = `rgb(${currentColor.rgb.r}, ${currentColor.rgb.g}, ${currentColor.rgb.b})`;
+                break;
+            case 'hsl':
+                text = `hsl(${currentColor.hsl.h}, ${currentColor.hsl.s}%, ${currentColor.hsl.l}%)`;
+                break;
+            case 'cmyk':
+                text = `cmyk(${currentColor.cmyk.c}%, ${currentColor.cmyk.m}%, ${currentColor.cmyk.y}%, ${currentColor.cmyk.k}%)`;
+                break;
+        }
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert(`${format.toUpperCase()} color copied to clipboard!`);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+    </script>
+</body>
+</html> 

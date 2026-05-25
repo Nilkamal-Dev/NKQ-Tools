@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Site Audit - Multi-Tools</title>
+    <meta name="description" content="Perform a comprehensive SEO audit of your website. Check technical SEO issues, analyze on-page elements, and get optimization recommendations.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .metric-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 10px 0;
+        }
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .issue-card {
+            border-left: 4px solid #dc3545;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #fff;
+        }
+        .issue-card.warning {
+            border-left-color: #ffc107;
+        }
+        .issue-card.success {
+            border-left-color: #198754;
+        }
+        .progress {
+            height: 25px;
+        }
+        .progress-bar {
+            font-size: 0.9rem;
+            line-height: 25px;
+        }
+        .check-item {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .check-item:last-child {
+            border-bottom: none;
+        }
+        .check-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .check-success { background-color: #d4edda; color: #155724; }
+        .check-warning { background-color: #fff3cd; color: #856404; }
+        .check-error { background-color: #f8d7da; color: #721c24; }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5>Analyzing Website...</h5>
+            <p class="text-muted">This may take a few moments</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-search"></i> SEO Site Audit</h1>
+                <p class="tool-description">Perform a comprehensive SEO audit of your website to identify issues and get optimization recommendations.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Input Form -->
+                        <div class="input-section p-4 border rounded mb-4">
+                            <form id="auditForm">
+                                <div class="mb-3">
+                                    <label for="websiteUrl" class="form-label">Website URL</label>
+                                    <div class="input-group">
+                                        <input type="url" class="form-control" id="websiteUrl" placeholder="https://example.com" required>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i> Start Audit
+                                        </button>
+                                    </div>
+                                    <div class="form-text">Enter your website URL to begin the SEO audit</div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="results-section d-none">
+                            <!-- Overview Metrics -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-tachometer-alt fa-2x text-primary"></i>
+                                        <div class="metric-value" id="seoScore">0</div>
+                                        <div class="metric-label">SEO Score</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                                        <div class="metric-value" id="criticalIssues">0</div>
+                                        <div class="metric-label">Critical Issues</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-exclamation-circle fa-2x text-warning"></i>
+                                        <div class="metric-value" id="warnings">0</div>
+                                        <div class="metric-label">Warnings</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                                        <div class="metric-value" id="passedChecks">0</div>
+                                        <div class="metric-label">Passed Checks</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEO Score Progress -->
+                            <div class="score-section mb-4">
+                                <h4>Overall SEO Score</h4>
+                                <div class="progress">
+                                    <div id="seoScoreBar" class="progress-bar" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                            </div>
+
+                            <!-- Critical Issues -->
+                            <div class="issues-section mb-4">
+                                <h4>Critical Issues</h4>
+                                <div id="criticalIssuesList">
+                                    <!-- Critical issues will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Warnings -->
+                            <div class="warnings-section mb-4">
+                                <h4>Warnings</h4>
+                                <div id="warningsList">
+                                    <!-- Warnings will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Technical SEO Checks -->
+                            <div class="technical-checks-section mb-4">
+                                <h4>Technical SEO Checks</h4>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="technicalChecksList">
+                                            <!-- Technical checks will be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- On-Page SEO Checks -->
+                            <div class="onpage-checks-section mb-4">
+                                <h4>On-Page SEO Checks</h4>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="onpageChecksList">
+                                            <!-- On-page checks will be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Optimization -->
+                            <div class="mobile-section mb-4">
+                                <h4>Mobile Optimization</h4>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div id="mobileChecksList">
+                                            <!-- Mobile checks will be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Export Options -->
+                            <div class="text-center mt-4">
+                                <button id="exportBtn" class="btn btn-success">
+                                    <i class="fas fa-download"></i> Export Report (PDF)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const auditForm = document.getElementById('auditForm');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const resultsSection = document.getElementById('resultsSection');
+            const exportBtn = document.getElementById('exportBtn');
+
+            // Handle form submission
+            auditForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const websiteUrl = document.getElementById('websiteUrl').value;
+                if (websiteUrl) {
+                    startAudit(websiteUrl);
+                }
+            });
+
+            function startAudit(websiteUrl) {
+                loadingOverlay.style.display = 'flex';
+                
+                // Simulate API call with mock data
+                setTimeout(() => {
+                    const mockData = generateMockData(websiteUrl);
+                    updateResults(mockData);
+                    loadingOverlay.style.display = 'none';
+                    resultsSection.classList.remove('d-none');
+                }, 3000);
+            }
+
+            function generateMockData(websiteUrl) {
+                const criticalIssues = [
+                    {
+                        title: 'Missing Meta Description',
+                        description: 'Your homepage is missing a meta description tag.',
+                        impact: 'High',
+                        recommendation: 'Add a unique meta description between 120-160 characters.'
+                    },
+                    {
+                        title: 'Slow Page Load Speed',
+                        description: 'Your page takes more than 3 seconds to load.',
+                        impact: 'High',
+                        recommendation: 'Optimize images and minimize HTTP requests.'
+                    }
+                ];
+
+                const warnings = [
+                    {
+                        title: 'Missing Alt Tags',
+                        description: 'Some images are missing alt text attributes.',
+                        impact: 'Medium',
+                        recommendation: 'Add descriptive alt text to all images.'
+                    },
+                    {
+                        title: 'Duplicate Content',
+                        description: 'Similar content found on multiple pages.',
+                        impact: 'Medium',
+                        recommendation: 'Consolidate duplicate content or use canonical tags.'
+                    }
+                ];
+
+                const technicalChecks = [
+                    { name: 'SSL Certificate', status: 'success', details: 'HTTPS is properly configured' },
+                    { name: 'XML Sitemap', status: 'success', details: 'Sitemap is present and valid' },
+                    { name: 'Robots.txt', status: 'warning', details: 'Some important pages are blocked' },
+                    { name: 'URL Structure', status: 'error', details: 'URLs contain unnecessary parameters' }
+                ];
+
+                const onpageChecks = [
+                    { name: 'Title Tag', status: 'success', details: 'Title is optimized' },
+                    { name: 'Meta Description', status: 'error', details: 'Missing meta description' },
+                    { name: 'Heading Structure', status: 'warning', details: 'H1 tag is missing' },
+                    { name: 'Image Optimization', status: 'warning', details: 'Some images need optimization' }
+                ];
+
+                const mobileChecks = [
+                    { name: 'Mobile Responsive', status: 'success', details: 'Website is mobile-friendly' },
+                    { name: 'Viewport Meta Tag', status: 'success', details: 'Viewport tag is present' },
+                    { name: 'Touch Elements', status: 'warning', details: 'Some buttons are too small' },
+                    { name: 'Font Size', status: 'success', details: 'Font sizes are readable' }
+                ];
+
+                return {
+                    seoScore: Math.floor(Math.random() * 40) + 60,
+                    criticalIssues: criticalIssues.length,
+                    warnings: warnings.length,
+                    passedChecks: technicalChecks.filter(c => c.status === 'success').length +
+                                 onpageChecks.filter(c => c.status === 'success').length +
+                                 mobileChecks.filter(c => c.status === 'success').length,
+                    criticalIssuesList: criticalIssues,
+                    warningsList: warnings,
+                    technicalChecks,
+                    onpageChecks,
+                    mobileChecks
+                };
+            }
+
+            function updateResults(data) {
+                // Update metrics
+                document.getElementById('seoScore').textContent = data.seoScore;
+                document.getElementById('criticalIssues').textContent = data.criticalIssues;
+                document.getElementById('warnings').textContent = data.warnings;
+                document.getElementById('passedChecks').textContent = data.passedChecks;
+
+                // Update SEO score progress bar
+                const seoScoreBar = document.getElementById('seoScoreBar');
+                seoScoreBar.style.width = data.seoScore + '%';
+                seoScoreBar.textContent = data.seoScore + '%';
+                seoScoreBar.className = 'progress-bar ' + getScoreClass(data.seoScore);
+
+                // Update critical issues
+                const criticalIssuesList = document.getElementById('criticalIssuesList');
+                criticalIssuesList.innerHTML = data.criticalIssuesList.map(issue => `
+                    <div class="issue-card">
+                        <h5>${issue.title}</h5>
+                        <p class="text-muted">${issue.description}</p>
+                        <div class="mt-2">
+                            <strong>Impact:</strong> ${issue.impact}<br>
+                            <strong>Recommendation:</strong> ${issue.recommendation}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Update warnings
+                const warningsList = document.getElementById('warningsList');
+                warningsList.innerHTML = data.warningsList.map(issue => `
+                    <div class="issue-card warning">
+                        <h5>${issue.title}</h5>
+                        <p class="text-muted">${issue.description}</p>
+                        <div class="mt-2">
+                            <strong>Impact:</strong> ${issue.impact}<br>
+                            <strong>Recommendation:</strong> ${issue.recommendation}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Update technical checks
+                const technicalChecksList = document.getElementById('technicalChecksList');
+                technicalChecksList.innerHTML = data.technicalChecks.map(check => `
+                    <div class="check-item">
+                        <span class="check-icon ${getStatusClass(check.status)}">
+                            <i class="fas ${getStatusIcon(check.status)}"></i>
+                        </span>
+                        <strong>${check.name}</strong>
+                        <span class="float-end text-muted">${check.details}</span>
+                    </div>
+                `).join('');
+
+                // Update on-page checks
+                const onpageChecksList = document.getElementById('onpageChecksList');
+                onpageChecksList.innerHTML = data.onpageChecks.map(check => `
+                    <div class="check-item">
+                        <span class="check-icon ${getStatusClass(check.status)}">
+                            <i class="fas ${getStatusIcon(check.status)}"></i>
+                        </span>
+                        <strong>${check.name}</strong>
+                        <span class="float-end text-muted">${check.details}</span>
+                    </div>
+                `).join('');
+
+                // Update mobile checks
+                const mobileChecksList = document.getElementById('mobileChecksList');
+                mobileChecksList.innerHTML = data.mobileChecks.map(check => `
+                    <div class="check-item">
+                        <span class="check-icon ${getStatusClass(check.status)}">
+                            <i class="fas ${getStatusIcon(check.status)}"></i>
+                        </span>
+                        <strong>${check.name}</strong>
+                        <span class="float-end text-muted">${check.details}</span>
+                    </div>
+                `).join('');
+            }
+
+            function getScoreClass(score) {
+                if (score >= 80) return 'bg-success';
+                if (score >= 60) return 'bg-warning';
+                return 'bg-danger';
+            }
+
+            function getStatusClass(status) {
+                switch (status) {
+                    case 'success': return 'check-success';
+                    case 'warning': return 'check-warning';
+                    case 'error': return 'check-error';
+                    default: return '';
+                }
+            }
+
+            function getStatusIcon(status) {
+                switch (status) {
+                    case 'success': return 'fa-check';
+                    case 'warning': return 'fa-exclamation';
+                    case 'error': return 'fa-times';
+                    default: return 'fa-question';
+                }
+            }
+
+            // Handle export
+            exportBtn.addEventListener('click', function() {
+                alert('PDF export functionality will be implemented here');
+            });
+        });
+    </script>
+</body>
+</html> 

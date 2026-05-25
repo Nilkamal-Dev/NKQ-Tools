@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to HTML Converter - Multi-Tools</title>
+    <meta name="description" content="Convert Markdown to HTML with this free online Markdown to HTML converter.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" rel="stylesheet">
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header mb-4">
+                <h1><i class="fas fa-code"></i> Markdown to HTML Converter</h1>
+                <p class="tool-description">Convert Markdown text to HTML with this free online converter.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card tool-card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="markdownInput" class="form-label">Markdown Input</label>
+                                <textarea class="form-control" id="markdownInput" rows="15" placeholder="Paste your Markdown here..."></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" onclick="convertToHtml()">Convert</button>
+                                <button class="btn btn-outline-secondary" onclick="clearInput()">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card tool-card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="htmlOutput" class="form-label">HTML Output</label>
+                                <pre><code id="htmlOutput" class="language-html"></code></pre>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                                <button class="btn btn-info" onclick="downloadHtml()">Download HTML</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+<footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script>
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+    function convertToHtml() {
+        const markdown = document.getElementById('markdownInput').value;
+        const output = document.getElementById('htmlOutput');
+        
+        // Convert Markdown to HTML
+        let html = markdown
+            // Headers
+            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+            .replace(/^#### (.*$)/gm, '<h4>$1</h4>')
+            .replace(/^##### (.*$)/gm, '<h5>$1</h5>')
+            .replace(/^###### (.*$)/gm, '<h6>$1</h6>')
+            
+            // Bold and Italic
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            
+            // Links
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+            
+            // Images
+            .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+            
+            // Lists
+            .replace(/^\s*\*\s(.*$)/gm, '<li>$1</li>')
+            .replace(/^\s*-\s(.*$)/gm, '<li>$1</li>')
+            .replace(/^\s*\d+\.\s(.*$)/gm, '<li>$1</li>')
+            
+            // Blockquotes
+            .replace(/^\s*>\s(.*$)/gm, '<blockquote>$1</blockquote>')
+            
+            // Code blocks
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            
+            // Horizontal rules
+            .replace(/^---$/gm, '<hr>')
+            .replace(/^\*\*\*$/gm, '<hr>')
+            .replace(/^___$/gm, '<hr>')
+            
+            // Paragraphs
+            .replace(/^\s*(\n)?(.+)/gm, function(m) {
+                return /\<(\/)?(h|p|blockquote|pre|ul|ol|li)/.test(m) ? m : '<p>'+m+'</p>';
+            })
+            
+            // Fix lists
+            .replace(/<li>.*?<\/li>/g, function(m) {
+                return '<ul>'+m+'</ul>';
+            })
+            .replace(/<\/ul><ul>/g, '')
+            
+            // Fix blockquotes
+            .replace(/<blockquote><p>/g, '<blockquote>')
+            .replace(/<\/p><\/blockquote>/g, '</blockquote>')
+            
+            // Clean up
+            .replace(/\n/g, '')
+            .replace(/<p><\/p>/g, '')
+            .replace(/<ul><\/ul>/g, '')
+            .replace(/<blockquote><\/blockquote>/g, '');
+        
+        output.textContent = html;
+        hljs.highlightElement(output);
+    }
+
+    function clearInput() {
+        document.getElementById('markdownInput').value = '';
+        document.getElementById('htmlOutput').textContent = '';
+    }
+
+    function copyToClipboard() {
+        const output = document.getElementById('htmlOutput');
+        navigator.clipboard.writeText(output.textContent).then(() => {
+            alert('HTML copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+
+    function downloadHtml() {
+        const output = document.getElementById('htmlOutput');
+        const blob = new Blob([output.textContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'converted.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    </script>
+</body>
+</html> 

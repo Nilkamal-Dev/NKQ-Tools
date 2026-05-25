@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Sitemap Generator - Multi-Tools</title>
+    <meta name="description" content="Generate XML and HTML sitemaps for your website. Set priorities, change frequencies, and customize your sitemap structure.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- CodeMirror CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .url-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .url-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .url-item:last-child {
+            border-bottom: none;
+        }
+        .url-item input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .url-item select {
+            width: 120px;
+            margin-right: 10px;
+        }
+        .url-item .btn {
+            padding: 0.25rem 0.5rem;
+        }
+        .CodeMirror {
+            height: 300px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .preview-section {
+            margin-top: 20px;
+        }
+        .preview-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .stats-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stats-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 10px 0;
+        }
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5>Generating Sitemap...</h5>
+            <p class="text-muted">This may take a few moments</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-sitemap"></i> SEO Sitemap Generator</h1>
+                <p class="tool-description">Generate XML and HTML sitemaps for your website with customizable settings.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Input Form -->
+                        <div class="input-section p-4 border rounded mb-4">
+                            <form id="sitemapForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="websiteUrl" class="form-label">Website URL</label>
+                                        <input type="url" class="form-control" id="websiteUrl" placeholder="https://example.com" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="sitemapType" class="form-label">Sitemap Type</label>
+                                        <select class="form-select" id="sitemapType">
+                                            <option value="xml">XML Sitemap</option>
+                                            <option value="html">HTML Sitemap</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- URL List -->
+                                <div class="url-list-section mb-4">
+                                    <h4>URLs</h4>
+                                    <div class="url-list" id="urlList">
+                                        <!-- URL items will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" id="addUrlBtn">
+                                        <i class="fas fa-plus"></i> Add URL
+                                    </button>
+                                </div>
+
+                                <!-- Default Settings -->
+                                <div class="default-settings-section mb-4">
+                                    <h4>Default Settings</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="defaultPriority" class="form-label">Default Priority</label>
+                                            <select class="form-select" id="defaultPriority">
+                                                <option value="1.0">1.0 - Highest</option>
+                                                <option value="0.8">0.8 - High</option>
+                                                <option value="0.6">0.6 - Medium</option>
+                                                <option value="0.4">0.4 - Low</option>
+                                                <option value="0.2">0.2 - Lowest</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="defaultChangeFreq" class="form-label">Default Change Frequency</label>
+                                            <select class="form-select" id="defaultChangeFreq">
+                                                <option value="always">Always</option>
+                                                <option value="hourly">Hourly</option>
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                                <option value="yearly">Yearly</option>
+                                                <option value="never">Never</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-cog"></i> Generate Sitemap
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="results-section d-none">
+                            <!-- Stats -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-link fa-2x text-primary"></i>
+                                        <div class="stats-value" id="totalUrls">0</div>
+                                        <div class="stats-label">Total URLs</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-clock fa-2x text-success"></i>
+                                        <div class="stats-value" id="lastModified">-</div>
+                                        <div class="stats-label">Last Modified</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-file-code fa-2x text-warning"></i>
+                                        <div class="stats-value" id="fileSize">0 KB</div>
+                                        <div class="stats-label">File Size</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Generated Sitemap -->
+                            <div class="generated-sitemap-section mb-4">
+                                <h4>Generated Sitemap</h4>
+                                <textarea id="sitemapOutput"></textarea>
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="preview-section">
+                                <h4>Preview</h4>
+                                <div class="preview-card" id="sitemapPreview">
+                                    <!-- Preview will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons mt-4">
+                                <button id="validateBtn" class="btn btn-primary me-2">
+                                    <i class="fas fa-check"></i> Validate Sitemap
+                                </button>
+                                <button id="copyBtn" class="btn btn-secondary me-2">
+                                    <i class="fas fa-copy"></i> Copy to Clipboard
+                                </button>
+                                <button id="downloadBtn" class="btn btn-success">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+ <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sitemapForm = document.getElementById('sitemapForm');
+            const urlList = document.getElementById('urlList');
+            const addUrlBtn = document.getElementById('addUrlBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const resultsSection = document.getElementById('resultsSection');
+            const validateBtn = document.getElementById('validateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            let editor = null;
+
+            // Initialize CodeMirror
+            editor = CodeMirror.fromTextArea(document.getElementById('sitemapOutput'), {
+                mode: 'xml',
+                theme: 'monokai',
+                lineNumbers: true,
+                readOnly: true
+            });
+
+            // Add URL button click handler
+            addUrlBtn.addEventListener('click', function() {
+                addUrlItem();
+            });
+
+            // Add initial URL item
+            addUrlItem();
+
+            function addUrlItem() {
+                const urlItem = document.createElement('div');
+                urlItem.className = 'url-item';
+                urlItem.innerHTML = `
+                    <input type="url" class="form-control" placeholder="https://example.com/page" required>
+                    <select class="form-select">
+                        <option value="1.0">1.0 - Highest</option>
+                        <option value="0.8">0.8 - High</option>
+                        <option value="0.6">0.6 - Medium</option>
+                        <option value="0.4">0.4 - Low</option>
+                        <option value="0.2">0.2 - Lowest</option>
+                    </select>
+                    <select class="form-select">
+                        <option value="always">Always</option>
+                        <option value="hourly">Hourly</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="never">Never</option>
+                    </select>
+                    <button type="button" class="btn btn-danger btn-sm remove-url">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                // Add remove button handler
+                urlItem.querySelector('.remove-url').addEventListener('click', function() {
+                    urlItem.remove();
+                });
+
+                urlList.appendChild(urlItem);
+            }
+
+            // Form submission handler
+            sitemapForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateSitemap();
+            });
+
+            function generateSitemap() {
+                loadingOverlay.style.display = 'flex';
+                
+                // Get form data
+                const websiteUrl = document.getElementById('websiteUrl').value;
+                const sitemapType = document.getElementById('sitemapType').value;
+                const defaultPriority = document.getElementById('defaultPriority').value;
+                const defaultChangeFreq = document.getElementById('defaultChangeFreq').value;
+                
+                // Get URLs
+                const urls = [];
+                document.querySelectorAll('.url-item').forEach(item => {
+                    const url = item.querySelector('input[type="url"]').value;
+                    const priority = item.querySelector('select:first-of-type').value;
+                    const changeFreq = item.querySelector('select:last-of-type').value;
+                    
+                    if (url) {
+                        urls.push({ url, priority, changeFreq });
+                    }
+                });
+
+                // Simulate API call
+                setTimeout(() => {
+                    const sitemap = generateSitemapContent(websiteUrl, urls, sitemapType, defaultPriority, defaultChangeFreq);
+                    updateResults(sitemap, urls.length);
+                    loadingOverlay.style.display = 'none';
+                    resultsSection.classList.remove('d-none');
+                }, 2000);
+            }
+
+            function generateSitemapContent(websiteUrl, urls, type, defaultPriority, defaultChangeFreq) {
+                const now = new Date().toISOString();
+                
+                if (type === 'xml') {
+                    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+                    
+                    urls.forEach(({ url, priority, changeFreq }) => {
+                        xml += `
+  <url>
+    <loc>${url}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>${changeFreq || defaultChangeFreq}</changefreq>
+    <priority>${priority || defaultPriority}</priority>
+  </url>`;
+                    });
+                    
+                    xml += '\n</urlset>';
+                    return xml;
+                } else {
+                    let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitemap - ${websiteUrl}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Sitemap</h1>
+    <ul>`;
+                    
+                    urls.forEach(({ url }) => {
+                        html += `\n        <li><a href="${url}">${url}</a></li>`;
+                    });
+                    
+                    html += '\n    </ul>\n</body>\n</html>';
+                    return html;
+                }
+            }
+
+            function updateResults(sitemap, urlCount) {
+                // Update stats
+                document.getElementById('totalUrls').textContent = urlCount;
+                document.getElementById('lastModified').textContent = new Date().toLocaleString();
+                document.getElementById('fileSize').textContent = formatFileSize(sitemap.length);
+
+                // Update editor
+                editor.setValue(sitemap);
+                editor.refresh();
+
+                // Update preview
+                const preview = document.getElementById('sitemapPreview');
+                if (document.getElementById('sitemapType').value === 'html') {
+                    preview.innerHTML = sitemap;
+                } else {
+                    preview.innerHTML = `<pre>${sitemap}</pre>`;
+                }
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            }
+
+            // Validate sitemap
+            validateBtn.addEventListener('click', function() {
+                const sitemapType = document.getElementById('sitemapType').value;
+                const sitemap = editor.getValue();
+                
+                try {
+                    if (sitemapType === 'xml') {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(sitemap, 'text/xml');
+                        
+                        if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+                            throw new Error('Invalid XML format');
+                        }
+                    }
+                    
+                    alert('Sitemap is valid!');
+                } catch (error) {
+                    alert('Invalid sitemap: ' + error.message);
+                }
+            });
+
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                const sitemap = editor.getValue();
+                navigator.clipboard.writeText(sitemap).then(() => {
+                    alert('Sitemap copied to clipboard!');
+                });
+            });
+
+            // Download sitemap
+            downloadBtn.addEventListener('click', function() {
+                const sitemap = editor.getValue();
+                const sitemapType = document.getElementById('sitemapType').value;
+                const extension = sitemapType === 'xml' ? 'xml' : 'html';
+                const blob = new Blob([sitemap], { type: sitemapType === 'xml' ? 'application/xml' : 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sitemap.${extension}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html> 

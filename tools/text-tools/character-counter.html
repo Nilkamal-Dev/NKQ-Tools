@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Counter - Multi-Tools</title>
+    <meta name="description" content="Count and analyze characters in your text. Get detailed character statistics, distribution, and frequency analysis.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .stats-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stats-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 10px 0;
+        }
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .text-area {
+            min-height: 300px;
+            resize: vertical;
+        }
+        .detailed-stats {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .detailed-stats h4 {
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        .stat-label {
+            color: #212529;
+            font-weight: 500;
+        }
+        .stat-value {
+            color: #6c757d;
+        }
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .character-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .character-cell {
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            margin: 2px;
+        }
+        .character-info {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .progress {
+            height: 10px;
+        }
+        .progress-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-text-width"></i> Character Counter</h1>
+                <p class="tool-description">Count and analyze characters in your text. Get detailed character statistics and distribution.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Input Section -->
+                        <div class="input-section mb-4">
+                            <textarea class="form-control text-area" id="textInput" placeholder="Type or paste your text here..."></textarea>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="quick-stats mb-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="stats-card">
+                                        <i class="fas fa-keyboard fa-2x text-primary"></i>
+                                        <div class="stats-value" id="totalChars">0</div>
+                                        <div class="stats-label">Total Characters</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stats-card">
+                                        <i class="fas fa-text-width fa-2x text-success"></i>
+                                        <div class="stats-value" id="charsNoSpaces">0</div>
+                                        <div class="stats-label">Without Spaces</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stats-card">
+                                        <i class="fas fa-font fa-2x text-warning"></i>
+                                        <div class="stats-value" id="uniqueChars">0</div>
+                                        <div class="stats-label">Unique Characters</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stats-card">
+                                        <i class="fas fa-percentage fa-2x text-danger"></i>
+                                        <div class="stats-value" id="density">0%</div>
+                                        <div class="stats-label">Character Density</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Character Distribution -->
+                        <div class="detailed-stats">
+                            <h4>Character Distribution</h4>
+                            <div class="chart-container">
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Character Types -->
+                        <div class="detailed-stats">
+                            <h4>Character Types</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Letters</span>
+                                        <span class="stat-value" id="letterCount">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Numbers</span>
+                                        <span class="stat-value" id="numberCount">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Spaces</span>
+                                        <span class="stat-value" id="spaceCount">0</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Punctuation</span>
+                                        <span class="stat-value" id="punctCount">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Special Characters</span>
+                                        <span class="stat-value" id="specialCount">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Line Breaks</span>
+                                        <span class="stat-value" id="lineBreakCount">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Character Table -->
+                        <div class="detailed-stats">
+                            <h4>Character Analysis</h4>
+                            <div class="character-table" id="charTable">
+                                <!-- Character cells will be added here -->
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons mt-4">
+                            <button id="clearBtn" class="btn btn-secondary me-2">
+                                <i class="fas fa-eraser"></i> Clear Text
+                            </button>
+                            <button id="copyBtn" class="btn btn-secondary me-2">
+                                <i class="fas fa-copy"></i> Copy Text
+                            </button>
+                            <button id="downloadBtn" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+   <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const totalChars = document.getElementById('totalChars');
+            const charsNoSpaces = document.getElementById('charsNoSpaces');
+            const uniqueChars = document.getElementById('uniqueChars');
+            const density = document.getElementById('density');
+            const letterCount = document.getElementById('letterCount');
+            const numberCount = document.getElementById('numberCount');
+            const spaceCount = document.getElementById('spaceCount');
+            const punctCount = document.getElementById('punctCount');
+            const specialCount = document.getElementById('specialCount');
+            const lineBreakCount = document.getElementById('lineBreakCount');
+            const charTable = document.getElementById('charTable');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            let distributionChart;
+
+            // Initialize Chart.js
+            function initChart() {
+                const ctx = document.getElementById('distributionChart').getContext('2d');
+                distributionChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Character Frequency',
+                            data: [],
+                            backgroundColor: '#0d6efd',
+                            borderColor: '#0d6efd',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Frequency'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Text analysis handler
+            textInput.addEventListener('input', function() {
+                const text = this.value;
+                analyzeText(text);
+            });
+
+            function analyzeText(text) {
+                // Basic counts
+                const total = text.length;
+                const noSpaces = text.replace(/\s/g, '').length;
+                const unique = new Set(text).size;
+                const densityValue = total > 0 ? Math.round((noSpaces / total) * 100) : 0;
+
+                // Character types
+                const letters = text.match(/[a-zA-Z]/g)?.length || 0;
+                const numbers = text.match(/\d/g)?.length || 0;
+                const spaces = text.match(/\s/g)?.length || 0;
+                const punctuation = text.match(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g)?.length || 0;
+                const lineBreaks = text.match(/\n/g)?.length || 0;
+                const special = total - (letters + numbers + spaces + punctuation + lineBreaks);
+
+                // Update UI
+                totalChars.textContent = total;
+                charsNoSpaces.textContent = noSpaces;
+                uniqueChars.textContent = unique;
+                density.textContent = densityValue + '%';
+                letterCount.textContent = letters;
+                numberCount.textContent = numbers;
+                spaceCount.textContent = spaces;
+                punctCount.textContent = punctuation;
+                specialCount.textContent = special;
+                lineBreakCount.textContent = lineBreaks;
+
+                // Update distribution chart
+                updateDistributionChart(text);
+
+                // Update character table
+                updateCharacterTable(text);
+            }
+
+            function updateDistributionChart(text) {
+                // Get character frequency
+                const freq = {};
+                text.split('').forEach(char => {
+                    freq[char] = (freq[char] || 0) + 1;
+                });
+
+                // Sort by frequency
+                const sorted = Object.entries(freq)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 20);
+
+                // Update chart
+                distributionChart.data.labels = sorted.map(([char]) => 
+                    char === ' ' ? 'Space' : 
+                    char === '\n' ? 'Line Break' : char);
+                distributionChart.data.datasets[0].data = sorted.map(([, count]) => count);
+                distributionChart.update();
+            }
+
+            function updateCharacterTable(text) {
+                // Get character frequency
+                const freq = {};
+                text.split('').forEach(char => {
+                    freq[char] = (freq[char] || 0) + 1;
+                });
+
+                // Create character cells
+                charTable.innerHTML = Object.entries(freq)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([char, count]) => `
+                        <div class="character-cell">
+                            <div class="character-display">
+                                ${char === ' ' ? 'â£' : 
+                                  char === '\n' ? 'â†µ' : 
+                                  char}
+                            </div>
+                            <div class="character-info">
+                                Count: ${count}<br>
+                                Code: ${char.charCodeAt(0)}
+                            </div>
+                            <div class="progress-label">
+                                ${((count / text.length) * 100).toFixed(1)}%
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${(count / text.length) * 100}%"></div>
+                            </div>
+                        </div>
+                    `).join('');
+            }
+
+            // Clear text
+            clearBtn.addEventListener('click', function() {
+                textInput.value = '';
+                analyzeText('');
+            });
+
+            // Copy text
+            copyBtn.addEventListener('click', function() {
+                textInput.select();
+                document.execCommand('copy');
+                alert('Text copied to clipboard!');
+            });
+
+            // Download report
+            downloadBtn.addEventListener('click', function() {
+                const text = textInput.value;
+                const report = generateReport(text);
+                
+                const blob = new Blob([report], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'character-analysis-report.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            function generateReport(text) {
+                return `Character Analysis Report
+=======================
+
+Basic Statistics
+---------------
+Total Characters: ${totalChars.textContent}
+Characters (no spaces): ${charsNoSpaces.textContent}
+Unique Characters: ${uniqueChars.textContent}
+Character Density: ${density.textContent}
+
+Character Types
+--------------
+Letters: ${letterCount.textContent}
+Numbers: ${numberCount.textContent}
+Spaces: ${spaceCount.textContent}
+Punctuation: ${punctCount.textContent}
+Special Characters: ${specialCount.textContent}
+Line Breaks: ${lineBreakCount.textContent}
+
+Character Distribution
+--------------------
+${Object.entries(text.split('').reduce((acc, char) => {
+    acc[char] = (acc[char] || 0) + 1;
+    return acc;
+}, {})).sort((a, b) => b[1] - a[1]).map(([char, count]) => 
+    `${char === ' ' ? 'Space' : char === '\n' ? 'Line Break' : char}: ${count}`
+).join('\n')}
+
+Original Text
+------------
+${text}`;
+            }
+
+            // Initialize chart
+            initChart();
+        });
+    </script>
+</body>
+</html> 

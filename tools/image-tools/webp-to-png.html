@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebP to PNG Converter - NKQ Tools</title>
+    <meta name="description" content="Convert WebP images to PNG format with transparency support. Free online WebP to PNG converter tool.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-exchange-alt"></i> WebP to PNG Converter</h1>
+                <p class="tool-description">Convert your WebP images to PNG format with transparency support. Fast, free, and no registration required.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <!-- Upload Section -->
+                        <div class="upload-section text-center p-4 border rounded mb-4">
+                            <form id="uploadForm" class="mb-4">
+                                <div class="mb-3">
+                                    <label for="imageInput" class="form-label">Choose a WebP file</label>
+                                    <input type="file" class="form-control" id="imageInput" accept=".webp,image/webp" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-exchange-alt"></i> Convert to PNG
+                                </button>
+                            </form>
+                            <div id="dropZone" class="drop-zone p-4 border rounded">
+                                <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                <p>Or drag and drop your WebP image here</p>
+                            </div>
+                        </div>
+
+                        <!-- Preview Section -->
+                        <div id="previewSection" class="preview-section d-none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Original WebP</h5>
+                                    <div class="image-preview mb-3">
+                                        <img id="originalPreview" class="img-fluid rounded" alt="Original WebP preview">
+                                        <p class="text-muted mt-2" id="originalSize"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Converted PNG</h5>
+                                    <div class="image-preview mb-3">
+                                        <img id="pngPreview" class="img-fluid rounded" alt="PNG preview">
+                                        <p class="text-muted mt-2" id="convertedSize"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button id="downloadBtn" class="btn btn-success">
+                                    <i class="fas fa-download"></i> Download PNG
+                                </button>
+                            </div>
+                        </div>
+        </div>
+    </main>
+
+   <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadForm = document.getElementById('uploadForm');
+            const imageInput = document.getElementById('imageInput');
+            const dropZone = document.getElementById('dropZone');
+            const previewSection = document.getElementById('previewSection');
+            const originalPreview = document.getElementById('originalPreview');
+            const pngPreview = document.getElementById('pngPreview');
+            const originalSize = document.getElementById('originalSize');
+            const convertedSize = document.getElementById('convertedSize');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            let originalFile = null;
+
+            // Handle file selection
+            imageInput.addEventListener('change', handleFileSelect);
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (imageInput.files.length > 0) {
+                    convertToPNG(imageInput.files[0]);
+                }
+            });
+
+            // Handle drag and drop
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.type === 'image/webp') {
+                        imageInput.files = e.dataTransfer.files;
+                        handleFileSelect();
+                    } else {
+                        alert('Please drop a WebP image file.');
+                    }
+                }
+            });
+
+            function handleFileSelect() {
+                const file = imageInput.files[0];
+                if (file && file.type === 'image/webp') {
+                    originalFile = file;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        originalPreview.src = e.target.result;
+                        originalSize.textContent = `Original size: ${formatFileSize(file.size)}`;
+                        previewSection.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Please select a WebP image file.');
+                }
+            }
+
+            function convertToPNG(file) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const pngDataUrl = canvas.toDataURL('image/png');
+                    pngPreview.src = pngDataUrl;
+
+                    // Calculate converted size
+                    const base64str = pngDataUrl.split(',')[1];
+                    const convertedBytes = atob(base64str).length;
+                    convertedSize.textContent = `Converted size: ${formatFileSize(convertedBytes)}`;
+                };
+                img.src = URL.createObjectURL(file);
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            downloadBtn.addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = 'converted-image.png';
+                link.href = pngPreview.src;
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checker - Multi-Tools</title>
+    <meta name="description" content="Check your text for grammar and spelling errors. Get suggestions and corrections to improve your writing.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <style>
+        .text-area {
+            min-height: 300px;
+            resize: vertical;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .score-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+        .score-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .score-high { color: #28a745; }
+        .score-medium { color: #ffc107; }
+        .score-low { color: #dc3545; }
+        .score-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .results-section {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .results-section h4 {
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+        .error-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+        .error-item h5 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .error-context {
+            font-family: monospace;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .error-suggestion {
+            font-size: 0.9rem;
+            color: #28a745;
+        }
+        .error-type {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        .type-grammar { background-color: #f8d7da; color: #721c24; }
+        .type-spelling { background-color: #fff3cd; color: #856404; }
+        .type-style { background-color: #d4edda; color: #155724; }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+        }
+        .progress-container {
+            margin: 20px 0;
+        }
+        .progress {
+            height: 10px;
+        }
+        .character-count {
+            font-size: 0.875rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .highlighted-text {
+            background-color: #ffc107;
+            padding: 2px;
+            border-radius: 2px;
+        }
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+        .stats-label {
+            color: #212529;
+            font-weight: 500;
+        }
+        .stats-value {
+            color: #6c757d;
+        }
+        .suggestion-btn {
+            font-size: 0.9rem;
+            padding: 2px 8px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="../../assets/img/NKQ.png" alt="NKQ Tools Logo" width="30" height="30" class="d-inline-block align-text-top">
+                NKQ Tools
+            </a>
+            </div>
+    </nav>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary loading-spinner" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5 class="mt-3">Checking Grammar</h5>
+            <p class="text-muted">This may take a few moments</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <div class="tool-container fade-in">
+            <div class="tool-header">
+                <h1><i class="fas fa-spell-check"></i> Grammar Checker</h1>
+                <p class="tool-description">Check your text for grammar and spelling errors. Get suggestions and corrections to improve your writing.</p>
+            </div>
+
+            <!-- Tool Content -->
+            <div class="tool-content">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Input Section -->
+                        <div class="input-section mb-4">
+                            <textarea class="form-control text-area" id="textInput" placeholder="Type or paste your text here..."></textarea>
+                            <div class="character-count">0 characters</div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons mb-4">
+                            <button id="checkBtn" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Check Grammar
+                            </button>
+                            <button id="clearBtn" class="btn btn-secondary ms-2">
+                                <i class="fas fa-eraser"></i> Clear Text
+                            </button>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="d-none">
+                            <!-- Progress Bar -->
+                            <div class="progress-container">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Analysis Progress</span>
+                                    <span id="progressText">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Grammar Score -->
+                            <div class="score-card">
+                                <i class="fas fa-check-circle fa-3x text-primary"></i>
+                                <div id="grammarScore" class="score-value">100%</div>
+                                <div class="score-label">Grammar Score</div>
+                            </div>
+
+                            <!-- Analysis Results -->
+                            <div class="results-section">
+                                <h4>Text Analysis</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="stats-item">
+                                            <span class="stats-label">Total Words:</span>
+                                            <span class="stats-value" id="wordCount">0</span>
+                                        </div>
+                                        <div class="stats-item">
+                                            <span class="stats-label">Sentences:</span>
+                                            <span class="stats-value" id="sentenceCount">0</span>
+                                        </div>
+                                        <div class="stats-item">
+                                            <span class="stats-label">Average Word Length:</span>
+                                            <span class="stats-value" id="avgWordLength">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="stats-item">
+                                            <span class="stats-label">Grammar Errors:</span>
+                                            <span class="stats-value" id="grammarErrors">0</span>
+                                        </div>
+                                        <div class="stats-item">
+                                            <span class="stats-label">Spelling Errors:</span>
+                                            <span class="stats-value" id="spellingErrors">0</span>
+                                        </div>
+                                        <div class="stats-item">
+                                            <span class="stats-label">Style Suggestions:</span>
+                                            <span class="stats-value" id="styleSuggestions">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Error List -->
+                            <div class="results-section">
+                                <h4>Issues Found</h4>
+                                <div id="errorList">
+                                    <!-- Errors will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Export Options -->
+                            <div class="text-center mt-4">
+                                <button id="exportPdfBtn" class="btn btn-primary">
+                                    <i class="fas fa-download"></i> Download Report (PDF)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+   <footer class="footer mt-5 bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">NKQ Tools</h5>
+                    <p class="small">Your one-stop solution for all your online tools. Explore our suite of free, safe,
+                        and efficient web applications for your daily needs.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../../index.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="../../tools/index.html" class="text-light text-decoration-none">Tools</a></li>
+                        <li><a href="../../about.html" class="text-light text-decoration-none">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled small">
+                        <!-- <li><a href="../../contact.html" class="text-light text-decoration-none">Contact Us</a></li> -->
+                        <li><a href="../../privacy.html" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="../../terms.html" class="text-light text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center small text-secondary">
+                    &copy; 2026 NKQ Tools | All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>const SITE_ROOT = '../../';</script>
+    <script src="../../assets/js/main.js"></script>
+    <!-- Tool-specific JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const checkBtn = document.getElementById('checkBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const grammarScore = document.getElementById('grammarScore');
+            const wordCount = document.getElementById('wordCount');
+            const sentenceCount = document.getElementById('sentenceCount');
+            const avgWordLength = document.getElementById('avgWordLength');
+            const grammarErrors = document.getElementById('grammarErrors');
+            const spellingErrors = document.getElementById('spellingErrors');
+            const styleSuggestions = document.getElementById('styleSuggestions');
+            const errorList = document.getElementById('errorList');
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            const characterCount = document.querySelector('.character-count');
+
+            // Common grammar mistakes for simulation
+            const commonErrors = {
+                grammar: [
+                    { pattern: /\bi am\b/gi, suggestion: "I am", explanation: "Capitalize 'I' when used as a pronoun" },
+                    { pattern: /\bthey was\b/gi, suggestion: "they were", explanation: "Use 'were' with plural subjects" },
+                    { pattern: /\bhe dont\b/gi, suggestion: "he doesn't", explanation: "Use 'doesn't' for third-person singular" },
+                    { pattern: /\byour doing\b/gi, suggestion: "you're doing", explanation: "Use 'you're' as contraction of 'you are'" }
+                ],
+                spelling: [
+                    { pattern: /\brecieve\b/gi, suggestion: "receive", explanation: "'i' before 'e' except after 'c'" },
+                    { pattern: /\bseperate\b/gi, suggestion: "separate", explanation: "Common spelling mistake" },
+                    { pattern: /\boccured\b/gi, suggestion: "occurred", explanation: "Double 'r' in 'occurred'" },
+                    { pattern: /\btheir is\b/gi, suggestion: "there is", explanation: "Use 'there' for existence" }
+                ],
+                style: [
+                    { pattern: /\bvery\b/gi, suggestion: ["extremely", "particularly", "notably"], explanation: "Consider using a more specific word" },
+                    { pattern: /\bgood\b/gi, suggestion: ["excellent", "outstanding", "superb"], explanation: "Use more descriptive adjectives" },
+                    { pattern: /\bbad\b/gi, suggestion: ["poor", "inadequate", "subpar"], explanation: "Use more precise words" },
+                    { pattern: /\bthing\b/gi, suggestion: ["aspect", "element", "factor"], explanation: "Be more specific" }
+                ]
+            };
+
+            // Text input handler
+            textInput.addEventListener('input', function() {
+                updateCharacterCount();
+            });
+
+            function updateCharacterCount() {
+                const count = textInput.value.length;
+                characterCount.textContent = `${count} character${count !== 1 ? 's' : ''}`;
+            }
+
+            // Check grammar
+            checkBtn.addEventListener('click', function() {
+                const text = textInput.value.trim();
+                if (text) {
+                    checkGrammar(text);
+                } else {
+                    alert('Please enter some text to check.');
+                }
+            });
+
+            function checkGrammar(text) {
+                // Show loading overlay
+                loadingOverlay.style.display = 'flex';
+                resultsSection.classList.remove('d-none');
+                
+                // Reset progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    updateProgress(progress);
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        analyzeText(text);
+                        loadingOverlay.style.display = 'none';
+                    }
+                }, 200);
+            }
+
+            function updateProgress(value) {
+                progressBar.style.width = `${value}%`;
+                progressText.textContent = `${value}%`;
+            }
+
+            function analyzeText(text) {
+                // Basic text analysis
+                const words = text.split(/\s+/).filter(word => word.length > 0);
+                const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+                const avgWordLen = words.length > 0 ? 
+                    (words.join('').length / words.length).toFixed(1) : 0;
+
+                // Find errors
+                const errors = [];
+                let grammarErrorCount = 0;
+                let spellingErrorCount = 0;
+                let styleErrorCount = 0;
+
+                // Check grammar errors
+                commonErrors.grammar.forEach(error => {
+                    const matches = text.match(error.pattern);
+                    if (matches) {
+                        grammarErrorCount += matches.length;
+                        matches.forEach(match => {
+                            errors.push({
+                                type: 'grammar',
+                                text: match,
+                                suggestion: error.suggestion,
+                                explanation: error.explanation
+                            });
+                        });
+                    }
+                });
+
+                // Check spelling errors
+                commonErrors.spelling.forEach(error => {
+                    const matches = text.match(error.pattern);
+                    if (matches) {
+                        spellingErrorCount += matches.length;
+                        matches.forEach(match => {
+                            errors.push({
+                                type: 'spelling',
+                                text: match,
+                                suggestion: error.suggestion,
+                                explanation: error.explanation
+                            });
+                        });
+                    }
+                });
+
+                // Check style suggestions
+                commonErrors.style.forEach(error => {
+                    const matches = text.match(error.pattern);
+                    if (matches) {
+                        styleErrorCount += matches.length;
+                        matches.forEach(match => {
+                            errors.push({
+                                type: 'style',
+                                text: match,
+                                suggestion: error.suggestion,
+                                explanation: error.explanation
+                            });
+                        });
+                    }
+                });
+
+                // Calculate grammar score
+                const totalErrors = grammarErrorCount + spellingErrorCount;
+                const grammarScoreValue = Math.max(0, Math.round(100 - (totalErrors / words.length * 100)));
+
+                // Update UI
+                wordCount.textContent = words.length;
+                sentenceCount.textContent = sentences.length;
+                avgWordLength.textContent = avgWordLen;
+                grammarErrors.textContent = grammarErrorCount;
+                spellingErrors.textContent = spellingErrorCount;
+                styleSuggestions.textContent = styleErrorCount;
+
+                // Update grammar score
+                grammarScore.textContent = grammarScoreValue + '%';
+                grammarScore.className = 'score-value ' + 
+                    (grammarScoreValue >= 80 ? 'score-high' : 
+                     grammarScoreValue >= 60 ? 'score-medium' : 'score-low');
+
+                // Update error list
+                errorList.innerHTML = errors.map(error => `
+                    <div class="error-item">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5>${error.type === 'style' ? 'Style Suggestion' : `${error.type.charAt(0).toUpperCase() + error.type.slice(1)} Error`}</h5>
+                            <span class="error-type type-${error.type}">${error.type}</span>
+                        </div>
+                        <div class="error-context">${error.text}</div>
+                        <div class="error-suggestion">
+                            <strong>Suggestion:</strong> 
+                            ${Array.isArray(error.suggestion) ? 
+                                error.suggestion.map(s => `
+                                    <button class="btn btn-outline-success btn-sm suggestion-btn">${s}</button>
+                                `).join('') :
+                                `<button class="btn btn-outline-success btn-sm suggestion-btn">${error.suggestion}</button>`
+                            }
+                        </div>
+                        <div class="mt-2">
+                            <strong>Explanation:</strong> ${error.explanation}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add suggestion click handlers
+                document.querySelectorAll('.suggestion-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const suggestion = this.textContent;
+                        const errorItem = this.closest('.error-item');
+                        const errorText = errorItem.querySelector('.error-context').textContent;
+                        textInput.value = textInput.value.replace(errorText, suggestion);
+                        errorItem.style.opacity = '0.5';
+                    });
+                });
+            }
+
+            // Clear text
+            clearBtn.addEventListener('click', function() {
+                textInput.value = '';
+                resultsSection.classList.add('d-none');
+                updateCharacterCount();
+            });
+
+            // Export PDF
+            exportPdfBtn.addEventListener('click', function() {
+                alert('PDF export functionality will be implemented with a PDF generation library.');
+            });
+        });
+    </script>
+</body>
+</html> 
