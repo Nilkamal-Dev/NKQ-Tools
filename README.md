@@ -34,26 +34,6 @@ Most tools work completely client-side, meaning your data stays on your device a
 
 ---
 
-## 📂 Project Structure
-
-```plaintext
-NKQ-Tools/
-│
-├── index.html
-├── about.html
-├── privacy.html
-├── terms.html
-├── sitemap.xml
-├── robots.txt
-│
-├── assets/
-│   └── img/
-│
-├── tools/
-```
-
----
-
 ## 👨‍💻 Developer
 
 Created by **Nilkamal Roy**
